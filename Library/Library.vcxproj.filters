@@ -27,6 +27,9 @@
     <ClInclude Include="library.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="borrow.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="user.cpp">
@@ -51,6 +54,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="library.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="borrow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

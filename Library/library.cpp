@@ -45,3 +45,8 @@ DATE getCurrentTime(int d, int m, int y)
 	date.year += y;
 	return date;
 }
+void flush() 
+{
+	char ch;
+	while ((ch = getchar()) != '\n' && ch != EOF);
+}

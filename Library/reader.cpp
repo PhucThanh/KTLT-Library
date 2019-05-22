@@ -1,51 +1,60 @@
 #include "reader.h"
 void printReader(READER reader) 
 {
-	printf("ID : %s\n", reader.id);
-	printf("Name : %s\n", reader.name);
-	printf("ID number : %s\n", reader.idNumber);
-
+	printf("=================================\n");
+	printf("> ID : %s\n", reader.id);
+	printf("> Ho va ten : %s\n", reader.name);
+	printf("> CMND : %s\n", reader.idNumber);
 	char time[12];
 	strcpy(time, DATEToString(reader.dob));
-	printf("Day of birth : %s\n",time );
-
+	printf("> Ngay sinh : %s\n",time );
 	if (reader.gender)
-		printf("Gender : male\n");
+		printf("> Gioi tinh : nam\n");
 	else
-		printf("Gender : female\n");
-	printf("Email : %s\n", reader.email);
-	printf("Address : %s\n", reader.address);
-
+		printf("> Gioi tinh : nu\n");
+	printf("> Email : %s\n", reader.email);
+	printf("> Dia chi : %s\n", reader.address);
 	strcpy(time, DATEToString(reader.start));
-	printf("Start day : %s\n", time);
-
+	printf("> Ngay lam the : %s\n", time);
 	strcpy(time, DATEToString(reader.end));
-	printf("End day : %s\n", time);
+	printf("> Ngay het han : %s\n", time);
+	printf("=================================\n");
 }
 void listReaders() //print list of reader
 {
 	char line[LINE_LENGTH];
 	char tmp[LINE_LENGTH];
 	char *tok = (char*)malloc(TEXT_LENGTH);
-	printf("%-13s%-20s%-15s%-11s%-10s%-20s%-20s%-15s%-15s\n", "ID", "Name", "ID number", "Birth", "Gender","Email","Address","Start day","End day");
+	printf("============================================================================================================================================================\n");
+	printf("|| %-13s%-25s%-15s%-12s%-10s%-20s%-20s%-15s%-15s\n", "ID", "Ho va ten", "CMND", "Ngay sinh", "Gioi tinh","Email","Dia chi","Ngay lam the","Ngay het han");
+	printf("============================================================================================================================================================\n");
 	FILE *fp = fopen("reader.csv", "r");
 	while (fgets(line, LINE_LENGTH, fp)) 
 	{
 		strcpy(tmp, line);
 		tok = strtok(tmp, ";");
-		printf("%-13s", tok);
+		printf("|| %-13s", tok);
 
 		tok = strtok(NULL, ";");
-		printf("%-20s", tok);
+		printf("%-25s", tok);
 
 		tok = strtok(NULL, ";");
 		printf("%-15s", tok);
 
 		tok = strtok(NULL, ";");
-		printf("%-11s", tok);
+		printf("%-12s", tok);
+
 
 		tok = strtok(NULL, ";");
-		printf("%-10s", tok);
+		if (atoi(tok) == 1) 
+		{
+			printf("%-10s", "Nam");
+		}
+		else
+		{
+			printf("%-10s", "Nu");
+		}
+		//printf("%-10s", tok);
 
 		tok = strtok(NULL, ";");
 		printf("%-20s", tok);
@@ -69,21 +78,24 @@ int lastID()
 	while (fgets(line, LINE_LENGTH, fp)) 
 	{
 		id = atoi(strtok(line, ";"));
+
 	}
 	fclose(fp);
-	return id;
+	if (id>1000)
+		return id;
+	return 9700000;//First user ever
 }
 void addReader() 
 {
-	printf("[ NEW READER ]\n");
+	printf("[ DOC GIA MOI ]\n");
 	char line[LINE_LENGTH] = "", input[TEXT_LENGTH];
 	const char *text[6];
-	text[0] = "Name : ";
-	text[1] = "ID Number : ";
-	text[2] = "Day of birth(dd/mm/yy) : ";
-	text[3] = "Gender (1-male 0-female) : ";
+	text[0] = "Ho va ten : ";
+	text[1] = "CMND : ";
+	text[2] = "Ngay sinh (dd/mm/yy) : ";
+	text[3] = "Gioi tinh (1-nam, 2-nu) : ";
 	text[4] = "Email : ";
-	text[5] = "Address : ";
+	text[5] = "Dia chi : ";
 
 	//Get lastest ID
 	int lastId = lastID();
@@ -120,9 +132,11 @@ void addReader()
 void deleteReader() 
 {
 	char id[TEXT_LENGTH];
-	printf("Write the ID of reader you want to delete : ");
+	printf("[XOA DOC GIA]\n");
+	printf("Ma doc gia : ");
 	scanf("%s", &id);
-	if (checkReaderID(id))
+	READER tmpReader;
+	if (checkReaderID(id,tmpReader))
 	{
 		FILE *fp = fopen("reader.csv", "r");
 		FILE *fptmp = fopen("temp", "w");
@@ -148,21 +162,22 @@ void deleteReader()
 		printf("Deleted reader %s\n", id);
 		fclose(fp);
 		fclose(fptmp);
+		remove("reader.csv");
+		rename("temp", "reader.csv");
 	}
 	else
 	{
 		printf("Can't find reader with that ID\n");
 	}
 }
-bool checkReaderID(char id[]) 
+bool checkReaderID(char id[],READER &reader) 
 {
 	FILE*fp = fopen("reader.csv", "r");
 	char line[LINE_LENGTH];
-	char *tok;
 	while (fgets(line, LINE_LENGTH, fp))
 	{
-		tok = strtok(line, ";");
-		if (strcmp(tok, id) == 0)
+		reader = stringToReader(line);
+		if (strcmp(reader.id, id) == 0) 
 		{
 			fclose(fp);
 			return true;
@@ -202,43 +217,6 @@ char * getReaderIdNumber(char line[])
 	return tok;
 }
 
-/*void updateReader(READER reader) 
-{
-	char buffer[TEXT_LENGTH];
-	_itoa(reader.id, buffer, 10);
-	if (checkReaderID(buffer)) {
-
-		printf("[ UPDATE READER INFORMATION ] \n");
-		char input[TEXT_LENGTH];
-
-		//getchar();
-		printf("Name : ");
-		gets_s(reader.name, TEXT_LENGTH);
-
-		printf("id Number : ");
-		gets_s(reader.idNumber, TEXT_LENGTH);
-
-		printf("Date of birth (dd/mm/yy) : ");
-		char buffer[TEXT_LENGTH];
-		gets_s(buffer, TEXT_LENGTH);
-		reader.dob = stringToDATE(buffer);
-
-		printf("Gender (1-male,0-female) : ");
-		scanf("%d", &reader.gender);
-		getchar();
-		printf("Email : ");
-		gets_s(reader.email, TEXT_LENGTH);
-
-		printf("Adress : ");
-		gets_s(reader.address, TEXT_LENGTH);
-
-		saveReader(reader);
-	}
-	else
-	{
-		printf("Reader %d doesn't exist\n", reader.id);
-	}
-}*/
 void updateReader() 
 {
 	char input[TEXT_LENGTH];
@@ -308,4 +286,6 @@ void saveReader(READER reader)
 	}
 	fclose(fp);
 	fclose(fptmp);
+	remove("reader.csv");
+	rename("temp", "reader.csv");
 }

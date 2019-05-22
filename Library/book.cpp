@@ -1,36 +1,40 @@
 #include "book.h"
 void printBook(BOOK b)
 {
-	printf("ISBN : %s\n", b.ISBN);
-	printf("Name : %s\n", b.name);
-	printf("Author : %s\n", b.author);
-	printf("Publisher : %s\n", b.publisher);
-	printf("Category : %s\n", b.category);
-	printf("Year : %d\n", b.year);
-	printf("Price : %d\n", b.price);
-	printf("Count: %d\n", b.stock);
+	printf("=================================\n");
+	printf("> ISBN : %s\n", b.ISBN);
+	printf("> Ten sach : %s\n", b.name);
+	printf("> Tac gia : %s\n", b.author);
+	printf("> NXB : %s\n", b.publisher);
+	printf("> The loai : %s\n", b.category);
+	printf("> Nam SX : %d\n", b.year);
+	printf("> Gia tien : %d\n", b.price);
+	printf("> So luong trong kho: %d\n", b.stock);
+	printf("=================================\n");
 }
 void BookList()
 {
 	char line[LINE_LENGTH];
 	char tmp[LINE_LENGTH];
 	char *tok;
-	printf("%-15s%-20s%-15s%-15s%-15s%-10s%-20s%-10s\n", "ISBN", "Name", "Author", "Publisher", "Category", "Year", "Price", "Count");
+	printf("============================================================================================================================================================\n");
+	printf("||  %-15s%-35s%-25s%-20s%-15s%-10s%-20s%-10s||\n", "ISBN", "Name", "Author", "Publisher", "Category", "Year", "Price", "Count");
+	printf("============================================================================================================================================================\n");
 	FILE *fp = fopen("book.csv", "r");
 	while (fgets(line, LINE_LENGTH, fp))
 	{
 		strcpy(tmp, line);
 		tok = strtok(tmp, ";");
-		printf("%-15s", tok);
+		printf("||  %-15s", tok);
+
+		tok = strtok(NULL, ";");
+		printf("%-35.34s", tok);
+
+		tok = strtok(NULL, ";");
+		printf("%-25s", tok);
 
 		tok = strtok(NULL, ";");
 		printf("%-20s", tok);
-
-		tok = strtok(NULL, ";");
-		printf("%-15s", tok);
-
-		tok = strtok(NULL, ";");
-		printf("%-15s", tok);
 
 		tok = strtok(NULL, ";");
 		printf("%-15s", tok);
@@ -80,7 +84,8 @@ void deleteBook()
 	char id[TEXT_LENGTH];
 	printf("Write the ISBN of the book you want to delete : ");
 	scanf("%s", &id);
-	if (checkISBN(id))
+	BOOK tmp;
+	if (checkISBN(id,tmp))
 	{
 		FILE *fp = fopen("book.csv", "r");
 		FILE *fptmp = fopen("temp", "w");
@@ -104,28 +109,13 @@ void deleteBook()
 		printf("Deleted Book ISBN : %s\n", id);
 		fclose(fp);
 		fclose(fptmp);
+		remove("book.csv");
+		rename("temp", "book.csv");
 	}
 	else
 	{
 		printf("Can't find Book with that ISBN\n");
 	}
-}
-bool checkISBN(char id[])
-{
-	FILE*fp = fopen("book.csv", "r");
-	char line[256];
-	char *tok;
-	while (fgets(line, 256, fp))
-	{
-		tok = strtok(line, ";");
-		if (strcmp(tok, id) == 0)
-		{
-			fclose(fp);
-			return true;
-		}
-	}
-	fclose(fp);
-	return false;
 }
 
 void updateBookInfo(BOOK b)
@@ -182,8 +172,12 @@ void saveBook(BOOK b)
 			fputs(line, fptmp);
 		}
 	}
+
 	fclose(fp);
 	fclose(fptmp);
+
+	remove("book.csv");
+	rename("temp", "book.csv");
 }
 
 void findISBN()
@@ -204,12 +198,36 @@ void findISBN()
 		if (strcmp(input, idHolder) == 0)
 		{
 			printBook(stringToBOOK(line));
+			fclose(fp);
 			break;
 		}
 	}
 	fclose(fp);
 }
 
+int checkISBN(char str[], BOOK &book)	
+{
+	FILE *fp = fopen("book.csv", "r");
+
+	char line[LINE_LENGTH];
+
+	while (fgets(line, LINE_LENGTH, fp))
+	{
+		book=stringToBOOK(line);
+		if (strcmp(book.ISBN,str)==0) 
+		{
+			if (book.stock > 0) 
+			{
+				fclose(fp);
+				return 1;
+			}
+			fclose(fp);
+			return -1;
+		}
+	}
+	fclose(fp);
+	return 0;
+}
 char * getISBN(char line[])
 {
 	char *tok;

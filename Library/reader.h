@@ -27,6 +27,6 @@ void updateReader();
 void saveReader(READER reader);	//Ham thong minh, tu dong tim thay user can save va save
 int lastID();
 void deleteReader();
-bool checkReaderID(char id[]);
+bool checkReaderID(char id[],READER &reader);//Find reader and store it to &reader
 void findReaderByIdNumber();
 char * getReaderIdNumber(char line[]);

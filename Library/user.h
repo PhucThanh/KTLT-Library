@@ -11,7 +11,7 @@ struct USER
 	DATE dob;
 	char id[12];
 	char address[TEXT_LENGTH];
-	bool sex; //0-female 1-male
+	bool gender; //0-female 1-male
 	bool status; //1-activated 0-block
 	int type;
 	//0-Chua dang nhap
@@ -39,4 +39,7 @@ void addUser();
 //Toi user hien tai thi copy theo user moi, skip user cu trong file
 void saveUser(USER user);
 bool checkUserName(char name[]);//return true if user name don't exist
+void printMenu(USER &user, int &n);
+void printSubMenu(USER &user, int &n);
+void execute(USER &user, int c, int n);
 #endif

@@ -99,7 +99,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
@@ -152,6 +152,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="book.h" />
+    <ClInclude Include="borrow.h" />
     <ClInclude Include="library.h" />
     <ClInclude Include="reader.h" />
     <ClInclude Include="user.h" />
@@ -159,6 +160,7 @@
   <ItemGroup>
     <ClCompile Include="book.cpp" />
     <ClCompile Include="book_convert.cpp" />
+    <ClCompile Include="borrow.cpp" />
     <ClCompile Include="library.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="reader.cpp" />

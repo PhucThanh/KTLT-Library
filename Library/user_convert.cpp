@@ -23,7 +23,7 @@ USER stringToUser(char *line)
 	tok = strtok(NULL, ";");
 	strcpy(user.address, tok);
 	tok = strtok(NULL, ";");
-	user.sex = atoi(tok);
+	user.gender = atoi(tok);
 	tok = strtok(NULL, ";");
 	user.status = atoi(tok);
 	tok = strtok(NULL, ";");
@@ -46,7 +46,7 @@ char * userToString(USER user)
 	strcat(line, user.address);
 	strcat(line, ";");
 	char buffer[TEXT_LENGTH];
-	_itoa(user.sex, buffer, 10);
+	_itoa(user.gender, buffer, 10);
 	strcat(line, buffer);
 	strcat(line, ";");
 	_itoa(user.status, buffer, 10);
