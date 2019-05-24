@@ -1,4 +1,4 @@
-#include "book.h"
+#include "library.h"
 void printBook(BOOK b)
 {
 	printf("=================================\n");
@@ -10,6 +10,7 @@ void printBook(BOOK b)
 	printf("> Nam SX : %d\n", b.year);
 	printf("> Gia tien : %d\n", b.price);
 	printf("> So luong trong kho: %d\n", b.stock);
+	printf("> So luong dang duoc muon : %d\n", b.borrowing);
 	printf("=================================\n");
 }
 void BookList()
@@ -46,7 +47,7 @@ void BookList()
 		printf("%-20s", tok);
 
 		tok = strtok(NULL, ";");
-		printf("%s", tok);
+		printf("%s\n", tok);
 
 	}
 	fclose(fp);
@@ -57,24 +58,22 @@ void addBook()
 	char line[256] = "", input[30];
 	const char *text[8];
 	text[0] = "ISBN : ";
-	text[1] = "Name : ";
-	text[2] = "Author : ";
-	text[3] = "Publisher : ";
-	text[4] = "Catergory : ";
-	text[5] = "Year : ";
-	text[6] = "Price: ";
-	text[7] = "Count: ";
+	text[1] = "Ten : ";
+	text[2] = "Tac gia : ";
+	text[3] = "NXB : ";
+	text[4] = "The loai : ";
+	text[5] = "Nam : ";
+	text[6] = "Gia: ";
+	text[7] = "So luong: ";
 	getchar();
 	for (int i = 0; i < 8; i++)
 	{
 		printf("%s", text[i]);
 		gets_s(input, 30);
 		strcat(line, input);
-		if (i < 7)
-			strcat(line, ";");
+		strcat(line, ";");
 	}
-	strcat(line, "\n");
-	printf("%s", line);
+	strcat(line, "0\n");//So luong muon
 	FILE*fp = fopen("book.csv", "a+");
 	fputs(line, fp);
 	fclose(fp);
@@ -106,7 +105,7 @@ void deleteBook()
 				fputs(line, fptmp);
 			}
 		}
-		printf("Deleted Book ISBN : %s\n", id);
+		printf("Nhap ISBN : %s\n", id);
 		fclose(fp);
 		fclose(fptmp);
 		remove("book.csv");
@@ -114,40 +113,45 @@ void deleteBook()
 	}
 	else
 	{
-		printf("Can't find Book with that ISBN\n");
+		printf("Khong tim thay sach ISBN tren\n");
 	}
 }
-
-void updateBookInfo(BOOK b)
+void updateBookInfo()
 {
-	printf("[ UPDATE BOOK INFORMATION ] \n");
+	BOOK b;
+	printf("[ CAP NHAT THONG TIN SACH ] \n");
 	char input[TEXT_LENGTH];
+	printf("Nhap ISBN : ");
+	scanf("%s", input);
+	if (checkISBN(input, b)) 
+	{
+		printf("Chinh sua thong tin cho sach #%s:\n", b.ISBN);
+		getchar();
+		printf("Ten sach : ");
+		gets_s(b.name, TEXT_LENGTH);
 
-	getchar();
-	printf("Name : ");
-	gets_s(b.name, TEXT_LENGTH);
+		printf("Tac gia : ");
+		gets_s(b.author, TEXT_LENGTH);
 
-	printf("Author : ");
-	gets_s(b.author, TEXT_LENGTH);
+		printf("NXB : ");
+		gets_s(b.publisher, TEXT_LENGTH);
 
-	printf("Publisher : ");
-	gets_s(b.publisher, TEXT_LENGTH);
+		printf("The loai : ");
+		gets_s(b.category, TEXT_LENGTH);
 
-	printf("Category : ");
-	gets_s(b.category, TEXT_LENGTH);
+		printf("Nam xuat ban: ");
+		scanf("%d", &b.year);
 
-	printf("Year : ");
-	scanf("%d", &b.year);
+		printf("Gia tien : ");
+		scanf("%d", &b.price);
 
-	printf("Price : ");
-	scanf("%d", &b.price);
-
-	printf("Count : ");
-	scanf("%d", &b.stock);
-
-	saveBook(b);
+		saveBook(b);
+	}
+	else 
+	{
+		printf("Khong tim thay sach\n");
+	}
 }
-
 void saveBook(BOOK b)
 {
 	FILE *fp = fopen("book.csv", "r");
@@ -216,7 +220,7 @@ int checkISBN(char str[], BOOK &book)
 		book=stringToBOOK(line);
 		if (strcmp(book.ISBN,str)==0) 
 		{
-			if (book.stock > 0) 
+			if (book.stock - book.borrowing > 0) 
 			{
 				fclose(fp);
 				return 1;
@@ -245,7 +249,7 @@ void findname()
 	FILE *fp = fopen("book.csv", "r");
 
 	char line[LINE_LENGTH];
-	char nameHolder[TEXT_LENGTH];
+	char nameHolder[LINE_LENGTH];
 	char tmp[LINE_LENGTH];
 
 	while (fgets(line, LINE_LENGTH, fp))

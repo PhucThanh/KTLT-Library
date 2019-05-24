@@ -1,4 +1,4 @@
-#include "book.h"
+#include "library.h"
 BOOK stringToBOOK(char line[]) //line = ___;___;____
 {
 	BOOK b;
@@ -21,6 +21,9 @@ BOOK stringToBOOK(char line[]) //line = ___;___;____
 	b.price = atoi(tok);
 	tok = strtok(NULL, ";");
 	b.stock = atoi(tok);
+
+	tok = strtok(NULL, ";");
+	b.borrowing = atoi(tok);
 	return b;
 }
 
@@ -46,7 +49,9 @@ char * BOOKtoString(BOOK b)
 	strcat(line, ";");
 	_itoa(b.stock, buffer, 10);
 	strcat(line, buffer);
+	strcat(line, ";");
+	_itoa(b.borrowing, buffer, 10);
+	strcat(line, buffer);
 	strcat(line, "\n");
-	//.....
 	return line;
 }

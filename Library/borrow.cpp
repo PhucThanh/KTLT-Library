@@ -1,4 +1,4 @@
-#include "borrow.h"
+#include "library.h"
 char* BORROWToString(BORROW borrow) 
 {
 	char line[LINE_LENGTH];
@@ -53,7 +53,7 @@ void addBorrow()
 	BORROW borrow;
 	borrow.begin = NULL;
 	char input[TEXT_LENGTH];
-	flush();
+	getchar();
 	printf("LAP PHIEU MUON SACH\n");
 	printf("Nhap ma doc gia muon sach: ");
 	gets_s(input, TEXT_LENGTH);
@@ -104,7 +104,8 @@ void addBorrow()
 				printBook(tmpBook[count]);
 				printf("> Da them sach vao phieu muon\n");
 				printf("=================================\n");
-				tmpBook[count].stock--;	//Giam so luong sach
+				//tmpBook[count].stock--;	//Giam so luong sach
+				tmpBook[count].borrowing++;
 				count++;
 				break;
 			case 0:
@@ -221,24 +222,35 @@ void returnBook()
 	char *tok,*tok2;
 	BOOK tmpBook[3];
 	bool returned = false;
+	int c = 0;
+	DATE today = getCurrentTime(0, 0, 0);
+
 	while (fgets(line, LINE_LENGTH, fp))
 	{
 		strcpy(tmp, line);
 		tok = strtok(tmp, ";");
-		int cost;
 		if (strcmp(input, tok) == 0)
 		{
 			
 			tok = strtok(NULL, ";");
 			printf("> Ngay muon sach : %s\n",tok);
 			tok = strtok(NULL, ";");
-			printf("> Ngay tra sach : %s\n",tok);
+			printf("> Ngay tra du kien : %s\n",tok);
+			char DATEtmp[TEXT_LENGTH];
+			strcpy(DATEtmp,DATEToString(today));
+			printf("> Ngay tra thuc te : %s\n",DATEtmp );
+			DATE returnDay= stringToDATE(tok);
+			int lateDay = dateBetween(returnDay, today);
+			if (lateDay > 0)
+				printf("Tre hang %d ngay, tien phat : %d\n", lateDay, lateDay * 5000);
+			else
+				lateDay = 0;
 			tok = strtok(NULL, ";");
 			printf("> Nhap trang thai cua sach : (0: Sach bi mat , 1: Sach khong bi mat)\n");
 			printf("============================\n");
 			
 			int n;
-
+			
 			tok2 = strtok_s(tok, ",",&tok);//tok2 = isbn1
 			for (int i = 0;i < 3;i++) 
 			{
@@ -253,8 +265,9 @@ void returnBook()
 					}
 					else
 					{
-						tmpBook[i].stock++;
+						
 					}
+					tmpBook[i].borrowing--;
 				}
 				else
 				{
@@ -262,10 +275,12 @@ void returnBook()
 						printf("> Khong tim thay sach co ISBN = %s .Co ve nhu sach da bi xoa khoi CSDL\n", tok2);
 				}
 				tok2 = strtok_s(NULL, ",", &tok);
-				if (tok2 == NULL) break;
+				c++;
+				if (strcmp(tok2,"\n")==0) break;
 			}
 			returned = true;
-			printf("> So tien phai tra la %d\n", money);
+			money += lateDay * 5000;
+			printf("> Tong so tien phai tra la %d\n", money);
 			break;
 		}
 	}
@@ -275,7 +290,7 @@ void returnBook()
 	{
 		deleteBorrow(input);
 		//Update lai so luong sach va xoa borrow
-		for (int i = 0;i < 3;i++)
+		for (int i = 0;i < c;i++)
 		{
 			saveBook(tmpBook[i]);
 		}
@@ -305,6 +320,7 @@ void deleteBorrow(char id[])
 			fputs(line, fptmp);
 		}
 	}
+
 	fclose(fp);
 	fclose(fptmp);
 	remove("borrow.csv");

@@ -1,4 +1,4 @@
-#include "reader.h"
+#include "library.h"
 void printReader(READER reader) 
 {
 	printf("=================================\n");
@@ -188,7 +188,7 @@ bool checkReaderID(char id[],READER &reader)
 }
 void findReaderByIdNumber() 
 {
-	printf("Write ID number of the reader you want to find : ");
+	printf("Nhap CMND  : ");
 	char input[TEXT_LENGTH];
 	scanf("%s", &input);
 	FILE *fp = fopen("reader.csv", "r");
@@ -196,7 +196,7 @@ void findReaderByIdNumber()
 	char line[LINE_LENGTH];
 	char idHolder[TEXT_LENGTH];
 	char tmp[LINE_LENGTH];
-
+	bool check=false;
 	while (fgets(line, LINE_LENGTH, fp)) 
 	{
 		strcpy(tmp, line);
@@ -204,10 +204,16 @@ void findReaderByIdNumber()
 		if (strcmp(input, idHolder) == 0) 
 		{
 			printReader(stringToReader(line));
+			check = true;
 			break;
 		}
 	}
+	if (!check) 
+	{
+		printf("> Khong tim thay doc gia voi so CMND tren\n");
+	}
 }
+
 char * getReaderIdNumber(char line[]) 
 {
 	char *tok;
@@ -216,7 +222,13 @@ char * getReaderIdNumber(char line[])
 	tok = strtok(NULL, ";");
 	return tok;
 }
-
+char * getReaderName(char line[])
+{
+	char *tok;
+	tok = strtok(line, ";");
+	tok = strtok(NULL, ";");
+	return tok;
+}
 void updateReader() 
 {
 	char input[TEXT_LENGTH];
@@ -288,4 +300,54 @@ void saveReader(READER reader)
 	fclose(fptmp);
 	remove("reader.csv");
 	rename("temp", "reader.csv");
+}
+void findBookByName() 
+{
+	printf("Nhap ten doc gia : "); 
+	char input[TEXT_LENGTH];
+	char line[LINE_LENGTH];
+	char line2[LINE_LENGTH];
+	char tmp[LINE_LENGTH];
+	getchar();
+	gets_s(input, TEXT_LENGTH);
+	//strtok(input, "\n");//remove \n
+
+	FILE *fp = fopen("reader.csv", "r");
+	FILE *fp2 = fopen("borrow.csv", "r");
+
+	bool check=false;
+	while (fgets(line, LINE_LENGTH, fp)) 
+	{
+		strcpy(tmp, line);
+		if (strcmp(input, getReaderName(tmp))==0)
+		{
+			char id[TEXT_LENGTH];
+			strcpy(id, strtok(line, ";"));	//get ID
+			while (fgets(line2, LINE_LENGTH, fp2)) 
+			{
+				if (strcmp(id, strtok(line2, ";")))
+				{
+					strtok(NULL, ";");
+					strtok(NULL, ";");
+					char bookList[TEXT_LENGTH];
+					strcpy(bookList,strtok(NULL, "\0"));
+					check = true;
+
+					printf("Danh sach cac sach cua nguoi dung nay :\n");
+					char *tok = strtok(bookList, ",");
+					while (tok != NULL) 
+					{
+						printf("%s\n", tok);
+						tok = strtok(NULL, ",");
+					}
+					break;
+				}
+			}
+			break;
+		}
+	}
+	if (!check) 
+	{
+		printf("Nguoi dung khong muon sach\n");
+	}
 }

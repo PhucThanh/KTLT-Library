@@ -43,10 +43,107 @@ DATE getCurrentTime(int d, int m, int y)
 	date.day += d;
 	date.month += m;
 	date.year += y;
+	date = dateFix(date);
 	return date;
 }
-void flush() 
+
+DATE dateFix(DATE date) 
 {
-	char ch;
-	while ((ch = getchar()) != '\n' && ch != EOF);
+	switch (date.month) 
+	{
+	case 1:
+	case 3:
+	case 5:
+	case 7:
+	case 8:
+	case 10:
+	case 12:
+		if (date.day > 31) 
+		{
+			date.day -= 31;
+			date.month++;
+		}
+		break;
+	case 4:
+	case 6:
+	case 9:
+	case 11:
+		if (date.day > 30)
+		{
+			date.day -= 30;
+			date.month++;
+		}
+		break;
+	case 2:
+		if (((date.year % 4 == 0) && (date.year % 100 != 0)) || (date.year % 400 == 0)) 
+		{
+			if (date.day > 29) 
+			{
+				date.day -= 29;
+				date.month++;
+			}
+		}
+		else
+		{
+			if (date.day > 28)
+			{
+				date.day -= 28;
+				date.month++;
+			}
+		}
+	}
+	if (date.month > 12) 
+	{
+		date.month -= 12;
+		date.year++;
+	}
+	return date;
+}
+int dateBetween(DATE date1, DATE date2) //Chi danh cho nhieu nhat 2 nam lien tiep nhau
+{
+	int d=0;
+	if (date1.year == date2.year)
+	{
+		if (date1.month != date2.month) 
+		{
+			if (((date1.year % 4 == 0) && (date1.year % 100 != 0)) || (date1.year % 400 == 0))
+			{
+				int m[] = { 0, 31,29,31,30,31,30,31,31,30,31,30,31 };
+				d += m[date1.month] - date1.day;
+				d += date2.day;
+				for (int i = date1.month + 1;i <= date2.month - 1;i++)
+				{
+					d += m[i];
+				}
+			}
+			else
+			{
+				int m[] = { 0,31,28,31,30,31,30,31,31,30,31,30,31 };
+				d += m[date1.month] - date1.day;
+				d += m[date2.month] - date2.day;
+				for (int i = date1.month + 1;i <= date2.month - 1;i++)
+				{
+					d += m[i];
+				}
+			}
+		}
+		else
+		{
+			d = date2.day - date1.day;
+		}
+	}
+	if (date1.year < date2.year)
+	{
+		DATE tmp;
+		tmp.day = 31;
+		tmp.month = 12;
+		tmp.year = date1.year;
+		d += dateBetween(date1, tmp);
+
+		tmp.day = 1;
+		tmp.month = 1;
+		tmp.year = date2.year;
+		d += dateBetween(tmp, date2);
+	}
+	return d;
 }

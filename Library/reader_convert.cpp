@@ -1,4 +1,4 @@
-#include "reader.h"
+#include "library.h"
 READER stringToReader(char *line) 
 {
 	READER reader;
