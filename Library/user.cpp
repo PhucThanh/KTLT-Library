@@ -2,7 +2,7 @@
 //CAC HAM CHUC NANG
 void createAdmin() 
 {
-	FILE *fp = fopen("user", "wb");
+	FILE *fp = fopen("user.dat", "wb");
 	USER user;
 	
 	printf("===============================\n");
@@ -19,7 +19,7 @@ void createAdmin()
 	user.dob = date;
 	strcpy(user.id, "123456789");
 	strcpy(user.name, "Your name");
-	strcpy(user.address, "Address");
+	strcpy(user.address, "Your Address");
 	user.status = 1;
 	user.gender = 1;
 	user.type = 1;
@@ -30,24 +30,24 @@ void createAdmin()
 
 USER login() 
 {
-	FILE *fp = fopen("user", "rb");
+	FILE *fp = fopen("user.dat", "rb");
 	USER user;
 	//Dien username va pass
 	system("cls");
 	printf(" ______________________________________\n");
 	printf("|                                      |\n");
-	printf("|               [LOGIN]                |\n");
+	printf("|             [DANG NHAP]              |\n");
 	printf("|______________________________________|\n");
 	printf("|                                      |\n");
-	printf("|   Username:                          |\n");
-	printf("|   Password:                          |\n");
+	printf("|  Ten dang nhap [________________]    |\n");
+	printf("|  Mat khau      [________________]    |\n");
 	printf("|                                      |\n");
 	printf("|______________________________________|\n");
 
 	char nameInput[TEXT_LENGTH], passInput[TEXT_LENGTH];	
-	gotoxy(6, 14);
+	gotoxy(6, 19);
 	scanf("%s", &nameInput);
-	gotoxy(7, 14);
+	gotoxy(7, 19);
 	scanf("%s", &passInput);
 	gotoxy(10, 0);
 
@@ -84,6 +84,7 @@ USER login()
 
 void printUser(USER user) 
 {
+	printf("=====================================================\n");
 	printf("Ten dang nhap: %s\n",user.userName);
 	printf("Password : ********\n");
 	printf("Ho va ten : %s\n",user.name);
@@ -98,7 +99,13 @@ void printUser(USER user)
 		printf("Tai khoan admin\n");
 	}
 	else
-		printf("Khong phai tai khoan admin\n");
+	{
+		if (user.type == 2)
+			printf("Tai khoan quan ly\n");
+		else
+			printf("Tai khoang chuyen vien\n");
+	}
+	printf("=====================================================\n");
 }
 void logOut(USER &user)
 {
@@ -113,38 +120,42 @@ void logOut(USER &user)
 void changePassword(USER &user) 
 {
 	char input[TEXT_LENGTH];
-	printf("Nhap password hien tai : ");
+	printf(" ______________________________________\n");
+	printf("|                                      |\n");
+	printf("|           THAY DOI MAT KHAU          |\n");
+	printf("|______________________________________|\n");
+	printf("> Nhap password hien tai : ");
 	
 	//getchar();
 	scanf("%s", &input);
 
 	if (strcmp(user.passWord, input) == 0) 
 	{
-		printf("Nhap password moi : ");
+		printf("> Nhap password moi : ");
 		scanf("%s", &input);
 		char input2[TEXT_LENGTH];
-		printf("Nhap lai password moi : ");
+		printf("> Nhap lai password moi : ");
 		scanf("%s", &input2);
 		if (strcmp(input, input2) == 0) 
 		{
 			strcpy(user.passWord, input);
-			printf("Thay doi password thanh cong\n");
+			printf("> Thay doi password thanh cong\n");
 			saveUser(user);
 		}
 		else 
 		{
-			printf("Password khong giong\n");
+			printf("> Password khong giong\n");
 		}
 	}
 	else
 	{
-		printf("Nhap sai password hien tai\n");
+		printf("> Nhap sai password hien tai\n");
 	}
 }
 
 void saveUser(USER user) 
 {
-	FILE *fp = fopen("user", "rb+");
+	FILE *fp = fopen("user.dat", "rb+");
 	USER tempUser;
 	int i = 0;
 	int t=-1;
@@ -173,7 +184,10 @@ void saveUser(USER user)
 
 void updateUser(USER &user) 
 {
-	printf("[ CAP NHAT THONG TIN NGUOI DUNG ]\n");
+	printf(" ______________________________________\n");
+	printf("|                                      |\n");
+	printf("|         CAP NHAT THONG TIN           |\n");
+	printf("|______________________________________|\n");
 	char input[TEXT_LENGTH];
 
 	getchar();
@@ -191,7 +205,7 @@ void updateUser(USER &user)
 	gets_s(user.address, TEXT_LENGTH);
 	
 	
-	printf("Gioi tinh (0-male 1-female) : ");
+	printf("Gioi tinh (1-Nam,0-Nu) : ");
 	int tmp;
 	scanf("%d", &tmp);
 	user.gender = tmp;
@@ -201,47 +215,59 @@ void updateUser(USER &user)
 void addUser() 
 {
 	USER user;
-	printf("[ NEW USER ]\n");
+	printf(" ______________________________________\n");
+	printf("|                                      |\n");
+	printf("|          TAO NGUOI DUNG MOI          |\n");
+	printf("|______________________________________|\n");
 	char input[TEXT_LENGTH];
-	printf("Username : ");
+	printf("> Ten dang nhap : ");
 	scanf("%s", user.userName);
 	if (!checkUserName(user.userName)) 
 	{
-		printf("Username already exist");
+		printf("> Ten dang nhap da ton tai\n");
 		return;
 	}
-	printf("Password : ");
+	printf("> Mat khau : ");
 	scanf("%s", user.passWord);
-	printf("First and last name : ");
+	printf("> Ho va ten : ");
 	getchar();
 	gets_s(user.name, TEXT_LENGTH);
-	printf("Date of birth (dd/mm/yy) :");
+	printf("> Ngay sinh (dd/mm/yy) :");
 	char buffer[TEXT_LENGTH];
 	scanf("%s", buffer);
 	user.dob = stringToDATE(buffer);
-	printf("ID : ");
+	printf("> CMND : ");
 	scanf("%s", user.id);
-	printf("Address : ");
-	scanf("%s", user.address);
-	printf("Gender (0-male 1-female) : ");
-	scanf("%d", &user.gender);
-	printf("Status (0-blocked 1-active) : ");
-	scanf("%d", &user.status);
-	printf("User type (2-manager 3-producer) : ");
+	printf("> Dia chi : ");
+	getchar();
+	gets_s(user.address);
+	int b;
+	printf("> Gioi tinh (1-nam,0-nu) : ");
+	scanf("%d", &b);
+	user.gender = b;
+	printf("> Trang thai (0-blocked 1-active) : ");
+	scanf("%d", &b);
+	user.status = b;
+	printf("> Loai nguoi dung (2-quan ly 3-chuyen vien) : ");
 	scanf("%d", &user.type);
 	getchar();
-	printf("Da tao nguoi dung moi\n");
+	printf("> Tao nguoi dung moi thanh cong\n");
 	printUser(user);
-	FILE*fp = fopen("user", "ab+");
+
+	FILE*fp = fopen("user.dat", "ab+");
 	fwrite(&user, sizeof(struct USER), 1, fp);
 	fclose(fp);
 }
 void changePermission() 
 {
-	printf("Nhap ten dang nhap muon thay doi quyen : ");
+	printf(" ______________________________________\n");
+	printf("|                                      |\n");
+	printf("|         PHAN QUYEN NGUOI DUNG        |\n");
+	printf("|______________________________________|\n");
+	printf("> Nhap ten dang nhap muon thay doi quyen : ");
 	char input[TEXT_LENGTH];
 	scanf("%s", input);
-	FILE *fp = fopen("user", "rb+");
+	FILE *fp = fopen("user.dat", "rb+");
 	USER user;
 	bool check = false;
 	while (1) 
@@ -249,13 +275,14 @@ void changePermission()
 		fread(&user, sizeof(struct USER), 1, fp);
 		if (strcmp(input, user.userName) == 0) 
 		{
-			printf("Trang thai : (0-block,1-active):");
+			printf("> Trang thai : (0-block,1-active):");
 			int tmp;
 			scanf("%d", &tmp);
 			user.status = tmp;
-			printf("Vai tro : (2-quan ly, 3-chuyen vien):");
+			printf("> Vai tro : (2-quan ly, 3-chuyen vien):");
 			scanf("%d", &user.type);
 			check = true;
+			printf("> Da thay doi quyen cua nguoi dung\n");
 			saveUser(user);
 			break;
 		}
@@ -266,13 +293,13 @@ void changePermission()
 	}
 	if (!check) 
 	{
-		printf("Khong tim thay nguoi dung tren\n");
+		printf("> Khong tim thay nguoi dung tren\n");
 	}
 	fclose(fp);
 }
 bool checkUserName(char name[]) 
 {
-	FILE*fp = fopen("user", "rb");
+	FILE*fp = fopen("user.dat", "rb");
 	USER user;
 	while (fread(&user,sizeof(struct USER),1,fp)) 
 	{
@@ -295,37 +322,37 @@ void printMenu(USER &user,int &n)
 	case 0:
 		break;
 	case 1:
-		printf(" ______________________________________\n");
-		printf("|                                      |\n");
-		printf("|            [ADMIN MENU]              |\n");
-		printf("|______________________________________|\n");
+		printf(" ___________________________________________________________\n");
+		printf("|                                                           |\n");
+		printf("|                      [ADMIN MENU]                         |\n");
+		printf("|___________________________________________________________|\n");
 
 		break;
 	case 2:
-		printf(" ______________________________________\n");
-		printf("|                                      |\n");
-		printf("|           [QUAN LY MENU]             |\n");
-		printf("|______________________________________|\n");
+		printf(" ___________________________________________________________\n");
+		printf("|                                                           |\n");
+		printf("|                      [QUAN LY MENU]                       |\n");
+		printf("|___________________________________________________________|\n");
 
 		break;
 	case 3:
-		printf(" ______________________________________\n");
-		printf("|                                      |\n");
-		printf("|         [CHUYEN VIEN MENU]           |\n");
-		printf("|______________________________________|\n");
+		printf(" ___________________________________________________________\n");
+		printf("|                                                           |\n");
+		printf("|                    [CHUYEN VIEN MENU]                     |\n");
+		printf("|___________________________________________________________|\n");
 		
 		break;
 	}
-	printf("|                                      |\n");
-	printf("|     1. Quan ly nguoi dung            |\n");
-	printf("|     2. Quan ly doc gia               |\n");
-	printf("|     3. Quan ly sach                  |\n");
-	printf("|     4. Quan ly phieu muon/tra        |\n");
-	printf("|     5. Thong ke                      |\n");
-	printf("|     0. Dang xuat                     |\n");
-	printf("|                                      |\n");
-	printf("|     Moi nhap so :                    |\n");
-	printf("|______________________________________|\n");
+	printf("|                                                           |\n");
+	printf("|     1. Quan ly nguoi dung                                 |\n");
+	printf("|     2. Quan ly doc gia                                    |\n");
+	printf("|     3. Quan ly sach                                       |\n");
+	printf("|     4. Quan ly phieu muon/tra                             |\n");
+	printf("|     5. Thong ke                                           |\n");
+	printf("|     0. Dang xuat                                          |\n");
+	printf("|                                                           |\n");
+	printf("|     Moi nhap so :                                         |\n");
+	printf("|___________________________________________________________|\n");
 	gotoxy(13, 20);
 	scanf("%d", &n);
 	if ((n >0) && (n<=5)) 
@@ -386,8 +413,7 @@ void printSubMenu(USER &user, int &n)
 	//15Find by name
 	//16Lap phieu muon
 	//17Lap phieu tra
-	//4 cai thong ke
-	//2 thong ke cuoi
+	//18-23 cac thong ke
 	*/
 	const char *text[24];
 	text[0] = "Thay doi mat khau";
@@ -419,103 +445,103 @@ void printSubMenu(USER &user, int &n)
 	switch (n) 
 	{
 	case 1://Quan ly nguoi dung
-		printf(" ______________________________________\n");
-		printf("|                                      |\n");
-		printf("|         [QUAN LY NGUOI DUNG]         |\n");
-		printf("|______________________________________|\n");
-		printf("|                                      |\n");
+		printf(" ___________________________________________________________\n");
+		printf("|                                                           |\n");
+		printf("|                   [QUAN LY NGUOI DUNG]                    |\n");
+		printf("|___________________________________________________________|\n");
+		printf("|                                                           |\n");
 		for (int i = 0;i <= 3;i++) 
 		{
 			if (permission[i]) 
 			{
-				printf("|    %d.%-32s|\n",j, text[i]);
+				printf("|    %d.%-53s|\n",j, text[i]);
 			}
 			else
 			{
-				printf("|   [X]%-32s|\n", text[i]);
+				printf("|   [X]%-53s|\n", text[i]);
 			}
 			j++;
 		}
 		break;
 	case 2://Quan ly doc gia
-		printf(" ______________________________________\n");
-		printf("|                                      |\n");
-		printf("|         [QUAN LY DOC GIA]            |\n");
-		printf("|______________________________________|\n");
-		printf("|                                      |\n");
+		printf(" ___________________________________________________________\n");
+		printf("|                                                           |\n");
+		printf("|                     [QUAN LY DOC GIA]                     |\n");
+		printf("|___________________________________________________________|\n");
+		printf("|                                                           |\n");
 		for (int i = 4;i <= 9;i++)
 		{
 			if (permission[i])
 			{
-				printf("|    %d.%-32s|\n", j, text[i]);
+				printf("|    %d.%-53s|\n", j, text[i]);
 			}
 			else
 			{
-				printf("|   [X]%-32s|\n", text[i]);
+				printf("|   [X]%-53s|\n", text[i]);
 			}
 			j++;
 		}
 		break;
 	case 3://Quan ly sach
-		printf(" ______________________________________\n");
-		printf("|                                      |\n");
-		printf("|          [QUAN LY SACH]              |\n");
-		printf("|______________________________________|\n");
-		printf("|                                      |\n");
+		printf(" ___________________________________________________________\n");
+		printf("|                                                           |\n");
+		printf("|                      [QUAN LY SACH]                       |\n");
+		printf("|___________________________________________________________|\n");
+		printf("|                                                           |\n");
 		for (int i = 10;i <= 15;i++)
 		{
 			if (permission[i])
 			{
-				printf("|    %d.%-32s|\n", j, text[i]);
+				printf("|    %d.%-53s|\n", j, text[i]);
 			}
 			else
 			{
-				printf("|   [X]%-32s|\n", text[i]);
+				printf("|   [X]%-53s|\n", text[i]);
 			}
 			j++;
 		}
 		break;
 	case 4:
-		printf(" ______________________________________\n");
-		printf("|                                      |\n");
-		printf("|         [QUAN LY PHIEU]              |\n");
-		printf("|______________________________________|\n");
-		printf("|                                      |\n");
+		printf(" ___________________________________________________________\n");
+		printf("|                                                           |\n");
+		printf("|                      [QUAN LY PHIEU]                      |\n");
+		printf("|___________________________________________________________|\n");
+		printf("|                                                           |\n");
 		for (int i = 16;i <= 17;i++)
 		{
 			if (permission[i])
 			{
-				printf("|    %d.%-32s|\n", j, text[i]);
+				printf("|    %d.%-53s|\n", j, text[i]);
 			}
 			else
 			{
-				printf("|   [X]%-32s|\n", text[i]);
+				printf("|   [X]%-53s|\n", text[i]);
 			}
 			j++;
 		}
 		break;
 	case 5:
-		printf(" ______________________________________\n");
-		printf("|                                      |\n");
-		printf("|             [THONG KE]               |\n");
-		printf("|______________________________________|\n");
-		printf("|                                      |\n");
+		printf(" ___________________________________________________________\n");
+		printf("|                                                           |\n");
+		printf("|                        [THONG KE]                         |\n");
+		printf("|___________________________________________________________|\n");
+		printf("|                                                           |\n");
 		for (int i = 18;i <= 23;i++)
 		{
 			if (permission[i])
 			{
-				printf("|    %d.%-32s|\n", j, text[i]);
+				printf("|    %d.%-53s|\n", j, text[i]);
 			}
 			else
 			{
-				printf("|   [X]%-32s|\n", text[i]);
+				printf("|   [X]%-53s|\n", text[i]);
 			}
 			j++;
 		}
 		break;
 	}
-	printf("|    0.Tro ve                          |\n");
-	printf("|______________________________________|\n");
+	printf("|    0.Tro ve                                               |\n");
+	printf("|___________________________________________________________|\n");
 	printf("|_Chon hanh dong : ");
 	int c;
 	scanf("%d", &c);
@@ -630,8 +656,30 @@ void printSubMenu(USER &user, int &n)
 			}
 			break;
 		case 5:
-			break;
-		case 6:
+			if (permission[c + 17])
+			{
+				switch (c)
+				{
+				case 1:
+					bookReport();
+					break;
+				case 2:
+					categoryReport();
+					break;
+				case 3:
+					readerReport();
+					break;
+				case 4:
+					genderReport();
+					break;
+				case 5:
+					listBorrowing();
+					break;
+				case 6:
+					listLate();
+					break;
+				}
+			}
 			break;
 		}
 		}

@@ -1,0 +1,20 @@
+﻿  book.cpp
+c:\college\nắm 1 - hk2\ktlt-th\libraryproject\library\book.cpp(294): fatal error C1010: unexpected end of file while looking for precompiled header. Did you forget to add '#include "pch.h"' to your source?
+  book_convert.cpp
+c:\college\nắm 1 - hk2\ktlt-th\libraryproject\library\book_convert.cpp(58): fatal error C1010: unexpected end of file while looking for precompiled header. Did you forget to add '#include "pch.h"' to your source?
+  borrow.cpp
+c:\college\nắm 1 - hk2\ktlt-th\libraryproject\library\borrow.cpp(290): fatal error C1010: unexpected end of file while looking for precompiled header. Did you forget to add '#include "pch.h"' to your source?
+  borrow_convert.cpp
+c:\college\nắm 1 - hk2\ktlt-th\libraryproject\library\borrow_convert.cpp(78): fatal error C1010: unexpected end of file while looking for precompiled header. Did you forget to add '#include "pch.h"' to your source?
+  library.cpp
+c:\college\nắm 1 - hk2\ktlt-th\libraryproject\library\library.cpp(166): fatal error C1010: unexpected end of file while looking for precompiled header. Did you forget to add '#include "pch.h"' to your source?
+  main.cpp
+c:\college\nắm 1 - hk2\ktlt-th\libraryproject\library\main.cpp(37): fatal error C1010: unexpected end of file while looking for precompiled header. Did you forget to add '#include "pch.h"' to your source?
+  reader.cpp
+c:\college\nắm 1 - hk2\ktlt-th\libraryproject\library\reader.cpp(372): fatal error C1010: unexpected end of file while looking for precompiled header. Did you forget to add '#include "pch.h"' to your source?
+  reader_convert.cpp
+c:\college\nắm 1 - hk2\ktlt-th\libraryproject\library\reader_convert.cpp(59): fatal error C1010: unexpected end of file while looking for precompiled header. Did you forget to add '#include "pch.h"' to your source?
+  stats.cpp
+c:\college\nắm 1 - hk2\ktlt-th\libraryproject\library\stats.cpp(359): fatal error C1010: unexpected end of file while looking for precompiled header. Did you forget to add '#include "pch.h"' to your source?
+  user.cpp
+c:\college\nắm 1 - hk2\ktlt-th\libraryproject\library\user.cpp(683): fatal error C1010: unexpected end of file while looking for precompiled header. Did you forget to add '#include "pch.h"' to your source?

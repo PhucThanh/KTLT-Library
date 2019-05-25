@@ -25,9 +25,9 @@ void listReaders() //print list of reader
 	char line[LINE_LENGTH];
 	char tmp[LINE_LENGTH];
 	char *tok = (char*)malloc(TEXT_LENGTH);
-	printf("============================================================================================================================================================\n");
-	printf("|| %-13s%-25s%-15s%-12s%-10s%-20s%-20s%-15s%-15s\n", "ID", "Ho va ten", "CMND", "Ngay sinh", "Gioi tinh","Email","Dia chi","Ngay lam the","Ngay het han");
-	printf("============================================================================================================================================================\n");
+	printf("=====================================================================================================================================================================\n");
+	printf("|| %-13s%-25s%-15s%-12s%-10s%-35s%-25s%-15s%-15s\n", "ID", "Ho va ten", "CMND", "Ngay sinh", "Gioi tinh","Email","Dia chi","Ngay lam the","Ngay het han");
+	printf("=====================================================================================================================================================================\n");
 	FILE *fp = fopen("reader.csv", "r");
 	while (fgets(line, LINE_LENGTH, fp)) 
 	{
@@ -57,10 +57,10 @@ void listReaders() //print list of reader
 		//printf("%-10s", tok);
 
 		tok = strtok(NULL, ";");
-		printf("%-20s", tok);
+		printf("%-35.24s", tok);
 
 		tok = strtok(NULL, ";");
-		printf("%-20s", tok);
+		printf("%-25s", tok);
 
 		tok = strtok(NULL, ";");
 		printf("%-15s", tok);
@@ -87,15 +87,18 @@ int lastID()
 }
 void addReader() 
 {
-	printf("[ DOC GIA MOI ]\n");
+	printf(" ______________________________________\n");
+	printf("|                                      |\n");
+	printf("|             THEM DOC GIA             |\n");
+	printf("|______________________________________|\n");
 	char line[LINE_LENGTH] = "", input[TEXT_LENGTH];
 	const char *text[6];
-	text[0] = "Ho va ten : ";
-	text[1] = "CMND : ";
-	text[2] = "Ngay sinh (dd/mm/yy) : ";
-	text[3] = "Gioi tinh (1-nam, 2-nu) : ";
-	text[4] = "Email : ";
-	text[5] = "Dia chi : ";
+	text[0] = "> Ho va ten : ";
+	text[1] = "> CMND : ";
+	text[2] = "> Ngay sinh (dd/mm/yy) : ";
+	text[3] = "> Gioi tinh (1-nam, 0-nu) : ";
+	text[4] = "> Email : ";
+	text[5] = "> Dia chi : ";
 
 	//Get lastest ID
 	int lastId = lastID();
@@ -124,7 +127,6 @@ void addReader()
 	date = getCurrentTime(0, 0, 4);	
 	strcat(line, DATEToString(date));
 	strcat(line, "\n");
-	printf("%s", line);
 	FILE*fp = fopen("reader.csv", "a+");
 	fputs(line, fp);
 	fclose(fp);
@@ -132,8 +134,11 @@ void addReader()
 void deleteReader() 
 {
 	char id[TEXT_LENGTH];
-	printf("[XOA DOC GIA]\n");
-	printf("Ma doc gia : ");
+	printf(" ______________________________________\n");
+	printf("|                                      |\n");
+	printf("|         XOA THONG TIN DOC GIA        |\n");
+	printf("|______________________________________|\n");
+	printf("> Ma doc gia : ");
 	scanf("%s", &id);
 	READER tmpReader;
 	if (checkReaderID(id,tmpReader))
@@ -159,7 +164,7 @@ void deleteReader()
 				fputs(line, fptmp);
 			}
 		}
-		printf("Deleted reader %s\n", id);
+		printf("> Da xoa doc gia #%s\n", id);
 		fclose(fp);
 		fclose(fptmp);
 		remove("reader.csv");
@@ -167,7 +172,7 @@ void deleteReader()
 	}
 	else
 	{
-		printf("Can't find reader with that ID\n");
+		printf("Khong tim thay doc gia tren\n");
 	}
 }
 bool checkReaderID(char id[],READER &reader) 
@@ -188,7 +193,11 @@ bool checkReaderID(char id[],READER &reader)
 }
 void findReaderByIdNumber() 
 {
-	printf("Nhap CMND  : ");
+	printf(" ______________________________________\n");
+	printf("|                                      |\n");
+	printf("|      TIM KIEM DOC GIA BANG CMND      |\n");
+	printf("|______________________________________|\n");
+	printf("> Nhap CMND  : ");
 	char input[TEXT_LENGTH];
 	scanf("%s", &input);
 	FILE *fp = fopen("reader.csv", "r");
@@ -232,7 +241,11 @@ char * getReaderName(char line[])
 void updateReader() 
 {
 	char input[TEXT_LENGTH];
-	printf("Write Reader's ID you want to update : ");
+	printf(" ______________________________________\n");
+	printf("|                                      |\n");
+	printf("|      CAP NHAT THONG TIN DOC GIA      |\n");
+	printf("|______________________________________|\n");
+	printf("> Nhap ma doc gia : \n");
 	scanf("%s", &input);
 	FILE *fp = fopen("reader.csv", "r");
 
@@ -249,27 +262,28 @@ void updateReader()
 		{
 			check = true;
 			READER reader = stringToReader(line);
-			printf("[ UPDATE READER #%s]\n", input);
-			printf("Name : ");
+			printf("> Cap nhat:\n", input);
+			printf("> Ho va ten : ");
 			gets_s(reader.name, TEXT_LENGTH);
-			printf("Id Number : ");
+			printf("> CMND : ");
 			gets_s(reader.idNumber, TEXT_LENGTH);
-			printf("Date of birth : ");
+			printf("> Ngay sinh : ");
 			char buffer[TEXT_LENGTH];
 			gets_s(buffer, TEXT_LENGTH);
 			reader.dob = stringToDATE(buffer);
-			printf("Email : ");
+			printf("> Email : ");
 			gets_s(reader.email, TEXT_LENGTH);
-			printf("Address : ");
+			printf("> Dia chi : ");
 			gets_s(reader.address, TEXT_LENGTH);
-
+			fclose(fp);
 			saveReader(reader);
 			break;
 		}
 	}
 	if (!check) 
 	{
-		printf("Can't find user with that ID\n");
+		printf("> Khong tim thay doc gia tren\n");
+		fclose(fp);
 	}
 }
 void saveReader(READER reader)
@@ -303,14 +317,17 @@ void saveReader(READER reader)
 }
 void findBookByName() 
 {
-	printf("Nhap ten doc gia : "); 
+	printf(" ______________________________________\n");
+	printf("|                                      |\n");
+	printf("|       TIM SACH THEO TEN DOC GIA      |\n");
+	printf("|______________________________________|\n");
+	printf("> Nhap ho va ten doc gia : "); 
 	char input[TEXT_LENGTH];
 	char line[LINE_LENGTH];
 	char line2[LINE_LENGTH];
 	char tmp[LINE_LENGTH];
 	getchar();
 	gets_s(input, TEXT_LENGTH);
-	//strtok(input, "\n");//remove \n
 
 	FILE *fp = fopen("reader.csv", "r");
 	FILE *fp2 = fopen("borrow.csv", "r");
@@ -329,11 +346,11 @@ void findBookByName()
 				{
 					strtok(NULL, ";");
 					strtok(NULL, ";");
-					char bookList[TEXT_LENGTH];
+					char bookList[LINE_LENGTH];
 					strcpy(bookList,strtok(NULL, "\0"));
 					check = true;
 
-					printf("Danh sach cac sach cua nguoi dung nay :\n");
+					printf("> Danh sach cac sach cua nguoi dung nay :\n");
 					char *tok = strtok(bookList, ",");
 					while (tok != NULL) 
 					{
@@ -348,6 +365,8 @@ void findBookByName()
 	}
 	if (!check) 
 	{
-		printf("Nguoi dung khong muon sach\n");
+		printf("> Nguoi dung khong muon sach\n");
 	}
+	fclose(fp);
+	fclose(fp2);
 }

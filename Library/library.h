@@ -71,7 +71,16 @@ struct BORROW
 	char reader[TEXT_LENGTH];//ID of reader
 	DATE start;
 	DATE end;
-	ref begin;
+	ref bookList;
+};
+struct RETURNTICKET
+{
+	char reader[TEXT_LENGTH];//ID of reader
+	DATE start;
+	DATE end;
+	DATE returnDay;
+	int money;
+	ref bookList;
 };
 DATE stringToDATE(char *line);
 char * DATEToString(DATE date);
@@ -138,11 +147,24 @@ char *getname(char line[]);
 //////////////////////////////////////////////////////////////////////////////////////////
 void addBorrow();
 ref getNode(char text[]);
-void add(ref &S, char text[]);
+void addLast(ref &S, char text[]);
 char* BORROWToString(BORROW borrow);
+BORROW stringToBORROW(char *line);
 bool checkReaderBorrowing(char[]); //check whenever reader is in borrow.csv
 void printfBorrow(BORROW borrow);
 void returnBook();
 void deleteBorrow(char id[]);
 int dateBetween(DATE date1, DATE date2);
+char* RETURNTICKETToString(RETURNTICKET r);
 #endif
+
+//////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////// STATS  ////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////
+void listBorrowing();
+void listLate();
+char *getcategory(char line[]);
+void bookReport();
+void categoryReport();
+void readerReport();
+void genderReport();

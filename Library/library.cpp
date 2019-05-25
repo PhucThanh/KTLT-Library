@@ -109,21 +109,37 @@ int dateBetween(DATE date1, DATE date2) //Chi danh cho nhieu nhat 2 nam lien tie
 			if (((date1.year % 4 == 0) && (date1.year % 100 != 0)) || (date1.year % 400 == 0))
 			{
 				int m[] = { 0, 31,29,31,30,31,30,31,31,30,31,30,31 };
-				d += m[date1.month] - date1.day;
-				d += date2.day;
-				for (int i = date1.month + 1;i <= date2.month - 1;i++)
+				if (date2.month > date1.month) 
 				{
-					d += m[i];
+					d += m[date1.month] - date1.day;
+					d += date2.day;
+					for (int i = date1.month + 1;i <= date2.month - 1;i++)
+						d += m[i];
+				}
+				else
+				{
+					d -=date1.day;
+					d -= m[date2.month] - date2.day;
+					for (int i = date2.month +1;i <= date1.month - 1;i++)
+						d -= m[i];
 				}
 			}
 			else
 			{
 				int m[] = { 0,31,28,31,30,31,30,31,31,30,31,30,31 };
-				d += m[date1.month] - date1.day;
-				d += m[date2.month] - date2.day;
-				for (int i = date1.month + 1;i <= date2.month - 1;i++)
+				if (date2.month > date1.month)
 				{
-					d += m[i];
+					d += m[date1.month] - date1.day;
+					d += date2.day;
+					for (int i = date1.month + 1;i <= date2.month - 1;i++)
+						d += m[i];
+				}
+				else 
+				{
+					d -= date1.day;
+					d -= m[date2.month] - date2.day;
+					for (int i = date2.month + 1;i <= date1.month - 1;i++)
+						d -= m[i];
 				}
 			}
 		}

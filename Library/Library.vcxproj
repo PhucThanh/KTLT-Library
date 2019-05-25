@@ -157,11 +157,12 @@
     <ClCompile Include="book.cpp" />
     <ClCompile Include="book_convert.cpp" />
     <ClCompile Include="borrow.cpp" />
+    <ClCompile Include="borrow_convert.cpp" />
     <ClCompile Include="library.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="reader.cpp" />
     <ClCompile Include="reader_convert.cpp" />
-    <ClCompile Include="stat.cpp" />
+    <ClCompile Include="stats.cpp" />
     <ClCompile Include="user.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
